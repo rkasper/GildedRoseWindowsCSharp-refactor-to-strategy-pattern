@@ -8,7 +8,7 @@ namespace csharp
     {
         private static void UpdateQualityAndCheckItem(GildedRose app, Item item, int expectedSellIn, int expectedQuality)
         {
-            app.UpdateQuality();
+            app.Update();
             Assert.AreEqual(expectedSellIn, item.SellIn);
             Assert.AreEqual(expectedQuality, item.Quality);
         }
@@ -16,9 +16,9 @@ namespace csharp
         [Test]
         public void TestFrameworkWorksProperly()
         {
-            IList<Item> Items = new List<Item> { new Item { Name = "foo", SellIn = 0, Quality = 0 } };
+            IList<Item> Items = new List<Item> { Item.NormalItem("foo", 0, 0) };
             GildedRose app = new GildedRose(Items);
-            app.UpdateQuality();
+            app.Update();
             Assert.AreEqual("foo", Items[0].Name);
         }
 
@@ -30,7 +30,7 @@ namespace csharp
         [Test]
         public void NormalItemSellInAndQualityDecreaseByOne()
         {
-            IList<Item> Items = new List<Item> { new Item { Name = "Normal Item", SellIn = 25, Quality = 15 } };
+            IList<Item> Items = new List<Item> { Item.NormalItem("Normal Item", 25, 15) };
             GildedRose app = new GildedRose(Items);
             UpdateQualityAndCheckItem(app, Items[0], 24, 14);
             UpdateQualityAndCheckItem(app, Items[0], 23, 13);
@@ -42,7 +42,7 @@ namespace csharp
         [Test]
         public void NormalItemQualityDegradesTwiceAsFast()
         {
-            IList<Item> Items = new List<Item> {new Item {Name = "Normal Item", SellIn = 1, Quality = 15}};
+            IList<Item> Items = new List<Item> { Item.NormalItem("Normal Item", 1, 15)};
             GildedRose app = new GildedRose(Items);
             UpdateQualityAndCheckItem(app, Items[0], 0, 14);
             UpdateQualityAndCheckItem(app, Items[0], -1, 12);
@@ -55,7 +55,7 @@ namespace csharp
         [Test]
         public void AgedBrieIncreasesInQuality()
         {
-            IList<Item> Items = new List<Item> { new Item { Name = "Aged Brie", SellIn = 25, Quality = 15 } };
+            IList<Item> Items = new List<Item> { Item.AgedBrie("Aged Brie", 25, 15)};
             GildedRose app = new GildedRose(Items);
             UpdateQualityAndCheckItem(app, Items[0],  24,  16);
             UpdateQualityAndCheckItem(app, Items[0], 23, 17);
@@ -67,11 +67,11 @@ namespace csharp
         [Test]
         public void QualityNeverMoreThan50()
         {
-            IList<Item> Items = new List<Item> { new Item { Name = "Aged Brie", SellIn = 25, Quality = 50 } };
+            IList<Item> Items = new List<Item> { Item.AgedBrie("Aged Brie", 25, 50) };
             GildedRose app = new GildedRose(Items);
             UpdateQualityAndCheckItem(app, Items[0], 24, 50);
 
-            Items = new List<Item> { new Item { Name = "Aged Brie", SellIn = -1, Quality = 48 } }; 
+            Items = new List<Item> { Item.AgedBrie("Aged Brie", -1, 48) }; 
             app = new GildedRose(Items);
             UpdateQualityAndCheckItem(app, Items[0], -2, 50);
         }
@@ -82,7 +82,7 @@ namespace csharp
         [Test]
         public void SulfurasIsSpecial()
         {
-            IList<Item> Items = new List<Item> { new Item { Name = "Sulfuras, Hand of Ragnaros", SellIn = 25, Quality = 15 } };
+            IList<Item> Items = new List<Item> { new Sulfuras { Name = "Sulfuras, Hand of Ragnaros", SellIn = 25, Quality = 15 } };
             GildedRose app = new GildedRose(Items);
             UpdateQualityAndCheckItem(app, Items[0], 25, 15);
         }
@@ -95,7 +95,7 @@ namespace csharp
         [Test]
         public void BacstagePassesAreSpecial()
         {
-            IList<Item> Items = new List<Item> { new Item { Name = "Backstage passes to a TAFKAL80ETC concert", SellIn = 11, Quality = 15 } };
+            IList<Item> Items = new List<Item> { new BackstagePasses { Name = "Backstage passes to a TAFKAL80ETC concert", SellIn = 11, Quality = 15 } };
             GildedRose app = new GildedRose(Items);
             UpdateQualityAndCheckItem(app, Items[0], 10, 16);
             UpdateQualityAndCheckItem(app, Items[0], 9, 18);
