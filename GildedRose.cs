@@ -13,7 +13,6 @@ namespace csharp
 
         public void Update()
         {
-            // TODO: I want to replace this with a closure...
             foreach (var item in Items)
             {
                 item.Update();
